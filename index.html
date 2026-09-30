@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="stylesheet" href="index.CSS">
+    <link rel="stylesheet" href="style.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;600&family=Sacramento&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
     <title>Murendiwa's Bubble</title>
 </head>
 
@@ -40,10 +40,10 @@
             </div>
             <div class="hero">
                 <div>
-                    <h1>Im a Software Deverloper, With much going on</h1>
+                    <h1>I'm a Software Developer, With much going on</h1>
                     <p>
                         I'm Murendiwa, but everyone calls me Candyy. I'm a software
-                        development student in Rosebank, A very cutious person that is
+                        development student at Rosebank, A very curios person that is
                         intrested in pretty much everything TEXT ME if you wanna know me
                         more.
                     </p>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="piano">
-                <small>I play piano. Tap the keys or use A to L on your keyboard. Each key
+                <small>Tap the keys or use A to L on your keyboard. Each key
                     changes the colour of the site.</small>
                 <div class="keys" id="keys" role="group" aria-label="Piano keyboard"></div>
             </div>
@@ -210,6 +210,137 @@
     <footer>Murendy · @ · All rights reserved, I think.</footer>
 
     <script>
+        // piano
+        const K = document.getElementById("keys"),
+            wn = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19],
+            bl = { 0: 1, 1: 3, 3: 6, 4: 8, 5: 10, 7: 13, 8: 15, 10: 18, 11: 20 },
+            ky = "asdfghjkl;'\\";
+        let ac;
+        const play = (s) => {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            const o = ac.createOscillator(),
+                g = ac.createGain(),
+                f = 261.63 * 2 ** (s / 12),
+                t = ac.currentTime;
+            o.type = "triangle";
+            o.frequency.value = f;
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(0.35, t + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 1.4);
+            o.connect(g).connect(ac.destination);
+            o.start(t);
+            o.stop(t + 1.5);
+        };
+        const PAL = [
+            "#1A34D6",
+            "#5B2FD6",
+            "#8E24AA",
+            "#C2185B",
+            "#C62828",
+            "#C2410C",
+            "#A16207",
+            "#2E7D32",
+            "#00796B",
+            "#00838F",
+            "#0277BD",
+            "#303F9F",
+        ];
+        const els = {};
+        const hit = (s, e) => {
+            play(s);
+            document.documentElement.style.setProperty("--blue", PAL[s % 12]);
+            e.classList.add("on");
+            setTimeout(() => e.classList.remove("on"), 160);
+        };
+        wn.forEach((s, i) => {
+            const e = document.createElement("div");
+            e.className = "w";
+            e.textContent = ky[i]?.toUpperCase() || "";
+            e.onpointerdown = () => hit(s, e);
+            K.append(e);
+            els[i] = [s, e];
+        });
+        Object.entries(bl).forEach(([i, s]) => {
+            const e = document.createElement("div");
+            e.className = "k";
+            e.style.left = `calc(${((+i + 1) / wn.length) * 100}% - 2.6%)`;
+            e.onpointerdown = (ev) => {
+                ev.stopPropagation();
+                hit(s, e);
+            };
+            K.append(e);
+        });
+        addEventListener("keydown", (e) => {
+            const i = ky.indexOf(e.key);
+            if (
+                i > -1 &&
+                !e.repeat &&
+                !/INPUT|TEXTAREA/.test(document.activeElement.tagName)
+            ) {
+                const [p, el] = els[i];
+                hit(p, el);
+            }
+        });
+
+        // nav highlight
+        const io = new IntersectionObserver(
+            (es) =>
+                es.forEach((e) => {
+                    if (e.isIntersecting)
+                        document
+                            .querySelectorAll("nav li a")
+                            .forEach((a) =>
+                                a.classList.toggle("on", a.hash == "#" + e.target.id),
+                            );
+                }),
+            { threshold: 0.45 },
+        );
+        document.querySelectorAll("section").forEach((s) => io.observe(s));
+
+        // tabs
+        document.querySelectorAll('.tab').forEach(b => b.onclick = () => { document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x == b)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id == b.dataset.p)) });
+        // compound calculator
+        const $ = id => document.getElementById(id), R = n => 'R' + Math.round(n).toLocaleString('en-ZA');
+        function calc() {
+            const m = +$('m').value, r = +$('r').value / 100 / 12, y = +$('y').value, n = y * 12, fv = r ? m * ((1 + r) ** n - 1) / r : m * n, c = m * n;
+            $('mo').textContent = R(m); $('ro').textContent = $('r').value + '%'; $('yo').textContent = y + ' yrs'; $('fv').textContent = R(fv); $('sp').style.width = c / fv * 100 + '%'; $('sm').textContent = `You put in ${R(c)}. Growth adds ${R(fv - c)}. Illustration only, not financial advice.`
+        }
+        ['m', 'r', 'y'].forEach(i => $(i).oninput = calc); calc();
+
+        // animated hello, cycling through South African greetings
+        const gr = [['hello', 320], ['sawubona', 200], ['dumela', 260], ['molo', 340], ['Ndaa', 320]], hw = document.getElementById('hw'), hl = document.getElementById('hello'); let gi = 0;
+        Promise.race([document.fonts ? document.fonts.load('200px Sacramento') : 0, new Promise(r => setTimeout(r, 2000))]).catch(() => { }).then(() => hl.classList.add('go'));
+        if (!matchMedia('(prefers-reduced-motion:reduce)').matches) setInterval(() => { hl.firstElementChild.style.opacity = 0; setTimeout(() => { gi = (gi + 1) % gr.length; hw.textContent = gr[gi][0]; hw.setAttribute('font-size', gr[gi][1]); hw.style.animation = 'none'; void hw.getBoundingClientRect(); hw.style.animation = ''; hl.firstElementChild.style.opacity = 1 }, 450) }, 6800);
+        // about photo (shows in this browser; ask Claude to embed it for all visitors)
+        const frame = $('frame'), pic = $('pic');
+        function setPic(u) { frame.style.backgroundImage = `url(${u})`; frame.classList.add('has') }
+        try { const s = localStorage.getItem('pic'); if (s) setPic(s) } catch (e) { }
+        frame.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') { e.preventDefault(); pic.click() } };
+        pic.onchange = () => { const f = pic.files[0]; if (!f) return; const im = new Image(); im.onload = () => { const s = Math.min(1, 900 / im.width), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); const u = c.toDataURL('image/jpeg', .85); setPic(u); try { localStorage.setItem('pic', u) } catch (e) { } }; im.src = URL.createObjectURL(f) };
+
+        // music flashcards
+        // EDIT ME: countdown from #10 to #1. [rank, artist, note]. Only #1 is confirmed, the rest is a placeholder order.
+        const FC = [['#10', 'Kendrick Lamar', ''], ['#9', 'Future', ''], ['#8', 'Frank Ocean', ''], ['#7', 'Travis Scott', ''], ['#6', 'Brent Faiyez', ''], ['#5', 'Drake', ''], ['#4', 'Black Coffee', ''], ['#3', 'J. Cole', 'Top American artist'], ['#2', 'A-Reece', 'Top SA artist'], ['#1', 'Kelvin Momo', 'Top artist by hours']];
+        let fi = 0, busy = false; const card = $('fcard'), inn = $('finner');
+        function show() { const c = FC[fi]; $('fq').textContent = c[0]; $('fa').textContent = c[1]; $('fs').textContent = c[2]; $('fcnt').textContent = (fi + 1) + ' / ' + FC.length; document.querySelectorAll('.spine').forEach((s, k) => s.classList.toggle('cur', FC.length - 1 - k == fi)); inn.classList.remove('flip') }
+        function go(d) { if (busy) return; busy = true; card.classList.add(d > 0 ? 'outL' : 'outR'); setTimeout(() => { fi = (fi + d + FC.length) % FC.length; show(); card.classList.remove('outL', 'outR'); card.classList.add(d > 0 ? 'inR' : 'inL'); setTimeout(() => { card.classList.remove('inR', 'inL'); busy = false }, 360) }, 270) }
+        const shCols = ['#1A34D6', '#FFB000', '#F2F4FA', '#3a56f0', '#e8912a', '#8fa1ff'], sh = $('shelf');
+        FC.slice().reverse().forEach((c, i) => { const idx = FC.length - 1 - i, b = document.createElement('button'), bg = shCols[i % 6]; b.className = 'spine'; b.textContent = c[0] + '  ' + c[1]; b.setAttribute('aria-label', 'Jump to ' + c[0] + ' ' + c[1]); b.style.background = bg; b.style.color = ['#1A34D6', '#3a56f0'].includes(bg) ? '#F2F4FA' : '#0A1330'; b.onclick = () => { if (!busy) { fi = idx; show() } }; sh.append(b) });
+        card.onclick = () => inn.classList.toggle('flip');
+        card.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') { e.preventDefault(); inn.classList.toggle('flip') } else if (e.key == 'ArrowRight') go(1); else if (e.key == 'ArrowLeft') go(-1) };
+        $('fnext').onclick = () => go(1); $('fprev').onclick = () => go(-1); show();
+
+        // photos by category
+        const CATS = ['mySelf', 'places', 'pusic', 'random']; let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
+        const pf = $('pf'), cw = $('cats');
+        function save() { try { localStorage.setItem('photos', JSON.stringify(store)) } catch (e) { alert('Not enough browser storage left for more photos.') } }
+        function drawPhotos() {
+            cw.innerHTML = ''; CATS.forEach((c, i) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = c; b.setAttribute('aria-selected', i == cat); b.onclick = () => { cat = i; drawPhotos() }; cw.append(b) });
+            pf.innerHTML = ''; (store[CATS[cat]] || []).forEach((u, i) => { const d = document.createElement('div'); d.className = 'card'; d.style.backgroundImage = `url(${u})`; const x = document.createElement('button'); x.textContent = '×'; x.setAttribute('aria-label', 'Remove photo'); x.onclick = () => { store[CATS[cat]].splice(i, 1); save(); drawPhotos() }; d.append(x); pf.append(d) });
+            const a = document.createElement('label'); a.className = 'card add'; a.tabIndex = 0; a.innerHTML = '+ Add photo<input type="file" accept="image/*" multiple hidden>'; const inp = a.querySelector('input'); a.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') { e.preventDefault(); inp.click() } };
+            inp.onchange = () => [...inp.files].forEach(f => { const im = new Image(); im.onload = () => { const s = Math.min(1, 700 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); (store[CATS[cat]] = store[CATS[cat]] || []).push(c.toDataURL('image/jpeg', .8)); save(); drawPhotos() }; im.src = URL.createObjectURL(f) }); pf.append(a)
+        }
+        drawPhotos();
 
     </script>
 </body>
