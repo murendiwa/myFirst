@@ -791,3 +791,158 @@ dl.facts {
 .calc small {
     font-size: 14px
 }
+
+/* contact */
+#contact {
+    background: var(--blue)
+}
+
+.cta {
+    display: block
+}
+
+.cta p {
+    max-width: 40ch
+}
+
+form {
+    display: grid;
+    gap: 14px
+}
+
+form input,
+form textarea {
+    width: 100%;
+    border: 2px solid var(--bone);
+    border-radius: 14px;
+    background: transparent;
+    color: var(--bone);
+    font: 400 17px var(--b);
+    padding: 14px 16px
+}
+
+form input::placeholder,
+form textarea::placeholder {
+    color: rgba(242, 244, 250, .7)
+}
+
+form textarea {
+    min-height: 130px;
+    resize: vertical
+}
+
+.soc {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 26px
+}
+
+.icons {
+    display: flex;
+    gap: 14px;
+    margin-top: 20px
+}
+
+.ic {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    transition: transform .2s, background .2s, color .2s
+}
+
+.ic svg {
+    width: 26px;
+    height: 26px
+}
+
+.ic:hover,
+.ic:focus-visible {
+    transform: translateY(-3px) scale(1.06);
+    background: var(--bone);
+    color: var(--blue)
+}
+
+footer {
+    background: var(--ink);
+    text-align: center;
+    padding: 26px;
+    font-size: 15px;
+    opacity: .9
+}
+
+@media(max-width:800px) {
+    section {
+        padding: 84px 6vw
+    }
+
+    #home {
+        padding-top: 100px
+    }
+
+    .hero,
+    .cols,
+    .cta {
+        grid-template-columns: 1fr
+    }
+
+    .mods,
+    .row,
+    .sleeves {
+        grid-template-columns: 1fr
+    }
+
+    .sleeves {
+        gap: 24px;
+        max-width: 340px
+    }
+
+    .keys {
+        height: 120px
+    }
+
+    .calc label {
+        grid-template-columns: 1fr 80px
+    }
+
+    .calc label span {
+        grid-column: 1/-1
+    }
+
+    nav li a {
+        padding: 6px 9px;
+        font-size: 14px
+    }
+
+    dl.facts {
+        grid-template-columns: auto 1fr
+    }
+
+    .frame {
+        max-width: 320px
+    }
+
+    .brand {
+        font-size: 18px
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .hw {
+        stroke-dashoffset: 0 !important;
+        fill-opacity: 1 !important
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important
+    }
+
+    html {
+        scroll-behavior: auto
+    }
+}
