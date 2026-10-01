@@ -51,7 +51,7 @@
                     <a class="btn o" href="#contact">Contact me</a>
                 </div>
                 <div class="disc" aria-hidden="true">
-                    <span>CANDY<br />Side A</span>
+                    <span>CANDY<br />MuzikA</span>
                 </div>
             </div>
             <div class="piano">
@@ -201,7 +201,7 @@
                         </svg></a>
                 </div>
                 <p style="margin-top: 22px; font-size: 16px; opacity: 0.85">
-                    DESIGNED & DEVELOPED BY MRY.
+                    DESIGNED & DEVELOPED BY MRY .
                 </p>
             </div>
         </div>
@@ -330,7 +330,7 @@
         $('fnext').onclick = () => go(1); $('fprev').onclick = () => go(-1); show();
 
         // photos by category
-        const CATS = ['mySelf', 'places', 'pusic', 'random']; let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
+        const CATS = ['mySelf', 'places', 'music', 'random']; let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
         const pf = $('pf'), cw = $('cats');
         function save() { try { localStorage.setItem('photos', JSON.stringify(store)) } catch (e) { alert('Not enough browser storage left for more photos.') } }
         function drawPhotos() {
