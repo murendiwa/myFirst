@@ -140,8 +140,8 @@
                 <div class="cats" id="cats" role="group" aria-label="Photo categories"></div>
                 <div class="focus" id="pf"></div>
                 <p class="note">
-                    Add photos with the + tile and remove them with ×. Photos are saved
-                    in this browser only.
+                    Photos you add with the + tile can be removed with ×. They are saved
+                    in your browser only.
                 </p>
             </div>
             <div class="pane" id="money">
@@ -311,10 +311,12 @@
         const gr = [['hello', 320], ['sawubona', 200], ['dumela', 260], ['molo', 340], ['Ndaa', 320]], hw = document.getElementById('hw'), hl = document.getElementById('hello'); let gi = 0;
         Promise.race([document.fonts ? document.fonts.load('200px Sacramento') : 0, new Promise(r => setTimeout(r, 2000))]).catch(() => { }).then(() => hl.classList.add('go'));
         if (!matchMedia('(prefers-reduced-motion:reduce)').matches) setInterval(() => { hl.firstElementChild.style.opacity = 0; setTimeout(() => { gi = (gi + 1) % gr.length; hw.textContent = gr[gi][0]; hw.setAttribute('font-size', gr[gi][1]); hw.style.animation = 'none'; void hw.getBoundingClientRect(); hw.style.animation = ''; hl.firstElementChild.style.opacity = 1 }, 450) }, 6800);
-        // about photo (shows in this browser; ask Claude to embed it for all visitors)
+        // about photo: shows assets/aboutMe.jpg for everyone; a photo picked by a visitor still overrides it in their own browser
+        const DEFAULT_PIC = 'assets/aboutMe.jpg';
         const frame = $('frame'), pic = $('pic');
-        function setPic(u) { frame.style.backgroundImage = `url(${u})`; frame.classList.add('has') }
-        try { const s = localStorage.getItem('pic'); if (s) setPic(s) } catch (e) { }
+        function setPic(u) { frame.style.backgroundImage = `url("${u}")`; frame.classList.add('has') }
+        let savedPic = null; try { savedPic = localStorage.getItem('pic') } catch (e) { }
+        setPic(savedPic || DEFAULT_PIC);
         frame.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') { e.preventDefault(); pic.click() } };
         pic.onchange = () => { const f = pic.files[0]; if (!f) return; const im = new Image(); im.onload = () => { const s = Math.min(1, 900 / im.width), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); const u = c.toDataURL('image/jpeg', .85); setPic(u); try { localStorage.setItem('pic', u) } catch (e) { } }; im.src = URL.createObjectURL(f) };
 
@@ -331,12 +333,21 @@
         $('fnext').onclick = () => go(1); $('fprev').onclick = () => go(-1); show();
 
         // photos by category
-        const CATS = ['mySelf', 'places', 'music', 'random']; let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
+        const CATS = ['mySelf', 'places', 'music', 'random'];
+        // EDIT ME: default pictures per category (files live in the assets folder; names are case-sensitive)
+        const DEFAULT_PHOTOS = {
+            mySelf: ['murendiwa.jpg', 'murendiwa2.jpg'],
+            places: [],
+            music: [],
+            random: ['random.jpg', 'random2.jpg', 'Rhulan.jpg', 'Tracy.jpg']
+        };
+        let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
         const pf = $('pf'), cw = $('cats');
         function save() { try { localStorage.setItem('photos', JSON.stringify(store)) } catch (e) { alert('Not enough browser storage left for more photos.') } }
         function drawPhotos() {
             cw.innerHTML = ''; CATS.forEach((c, i) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = c; b.setAttribute('aria-selected', i == cat); b.onclick = () => { cat = i; drawPhotos() }; cw.append(b) });
-            pf.innerHTML = ''; (store[CATS[cat]] || []).forEach((u, i) => { const d = document.createElement('div'); d.className = 'card'; d.style.backgroundImage = `url(${u})`; const x = document.createElement('button'); x.textContent = '×'; x.setAttribute('aria-label', 'Remove photo'); x.onclick = () => { store[CATS[cat]].splice(i, 1); save(); drawPhotos() }; d.append(x); pf.append(d) });
+            pf.innerHTML = ''; (DEFAULT_PHOTOS[CATS[cat]] || []).forEach(f => { const d = document.createElement('div'); d.className = 'card'; d.style.backgroundImage = `url("assets/${f}")`; pf.append(d) });
+            (store[CATS[cat]] || []).forEach((u, i) => { const d = document.createElement('div'); d.className = 'card'; d.style.backgroundImage = `url(${u})`; const x = document.createElement('button'); x.textContent = '×'; x.setAttribute('aria-label', 'Remove photo'); x.onclick = () => { store[CATS[cat]].splice(i, 1); save(); drawPhotos() }; d.append(x); pf.append(d) });
             const a = document.createElement('label'); a.className = 'card add'; a.tabIndex = 0; a.innerHTML = '+ Add photo<input type="file" accept="image/*" multiple hidden>'; const inp = a.querySelector('input'); a.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') { e.preventDefault(); inp.click() } };
             inp.onchange = () => [...inp.files].forEach(f => { const im = new Image(); im.onload = () => { const s = Math.min(1, 700 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); (store[CATS[cat]] = store[CATS[cat]] || []).push(c.toDataURL('image/jpeg', .8)); save(); drawPhotos() }; im.src = URL.createObjectURL(f) }); pf.append(a)
         }
