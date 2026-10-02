@@ -324,7 +324,7 @@
 
         // music flashcards
         // EDIT ME: countdown from #10 to #1. [rank, artist, note]. Only #1 is confirmed, the rest is a placeholder order.
-        const FC = [['#10', 'Kendrick Lamar', ''], ['#9', 'Future', ''], ['#8', 'Frank Ocean', ''], ['#7', 'Travis Scott', ''], ['#6', 'Brent Faiyez', ''], ['#5', 'Drake', ''], ['#4', 'Black Coffee', ''], ['#3', 'J. Cole', 'Top American artist'], ['#2', 'A-Reece', 'Top SA artist'], ['#1', 'Kelvin Momo', 'Top artist by hours']];
+        const FC = [['#10', 'Kendrick Lamar', 'Damn'], ['#9', 'Future', 'High of Life'], ['#8', 'Frank Ocean', 'Blonde'], ['#7', 'Travis Scott', 'Astroworld'], ['#6', 'Brent Faiyez', 'Wasteland'], ['#5', 'Drake', 'TAKE CARE'], ['#4', 'Black Coffee', 'Home Brewed'], ['#3', 'J. Cole', 'The Fall Off'], ['#2', 'A-Reece', 'TTTM'], ['#1', 'Kelvin Momo', 'Amukelani']];
         let fi = 0, busy = false; const card = $('fcard'), inn = $('finner');
         function show() { const c = FC[fi]; $('fq').textContent = c[0]; $('fa').textContent = c[1]; $('fs').textContent = c[2]; $('fcnt').textContent = (fi + 1) + ' / ' + FC.length; document.querySelectorAll('.spine').forEach((s, k) => s.classList.toggle('cur', FC.length - 1 - k == fi)); inn.classList.remove('flip') }
         function go(d) { if (busy) return; busy = true; card.classList.add(d > 0 ? 'outL' : 'outR'); setTimeout(() => { fi = (fi + d + FC.length) % FC.length; show(); card.classList.remove('outL', 'outR'); card.classList.add(d > 0 ? 'inR' : 'inL'); setTimeout(() => { card.classList.remove('inR', 'inL'); busy = false }, 360) }, 270) }
@@ -341,7 +341,7 @@
             mySelf: ['murendiwa.jpg', 'murendiwa2.jpg'],
             places: [],
             music: [],
-            random: ['random.jpg', 'random2.jpg', 'Rhulan.jpg', 'Tracy.jpg']
+            random: ['random.jpg', 'random2.jpg']
         };
         let cat = 0, store = {}; try { store = JSON.parse(localStorage.getItem('photos') || '{}') } catch (e) { }
         const pf = $('pf'), cw = $('cats');
