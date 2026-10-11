@@ -293,6 +293,27 @@ h1 {
     margin: auto;
     touch-action: manipulation;
 }
+/* piano sound toggle */
+.snd {
+    display: block;
+    margin: 0 auto 14px;
+    background: transparent;
+    color: var(--bone);
+    border: 2px solid rgba(242, 244, 250, .45);
+    border-radius: 99px;
+    font: 600 14px var(--b);
+    padding: 5px 16px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.snd:hover {
+    border-color: var(--amber);
+}
+
+.snd[aria-pressed="false"] {
+    opacity: .75;
+}
 
 .w {
     flex: 1;

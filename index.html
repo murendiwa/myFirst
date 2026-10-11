@@ -56,9 +56,11 @@
                     <span>CANDY<br />Record</span>
                 </div>
             </div>
+            
             <div class="piano">
                 <small>Tap the keys or use A to L on your keyboard. Each key
                     changes the colour of the site.</small>
+                <button class="snd" id="snd" type="button" aria-pressed="true">Sound: on</button>
                 <div class="keys" id="keys" role="group" aria-label="Piano keyboard"></div>
             </div>
         </div>
@@ -233,6 +235,7 @@
             o.start(t);
             o.stop(t + 1.5);
         };
+        
         const PAL = [
             "#1A34D6",
             "#5B2FD6",
@@ -248,9 +251,24 @@
             "#303F9F",
         ];
         const els = {};
-        const hit = (s, e) => {
-            play(s);
-            document.documentElement.style.setProperty("--blue", PAL[s % 12]);
+        // sound setting (remembered in this browser)
+            let snd = true;
+            try { snd = localStorage.getItem("snd") !== "0"; } catch (e) { }
+            const sb = document.getElementById("snd");
+            const paintSnd = () => {
+                sb.textContent = "Sound: " + (snd ? "on" : "off");
+                sb.setAttribute("aria-pressed", snd);
+            };
+            paintSnd();
+            sb.onclick = () => {
+                snd = !snd;
+                paintSnd();
+                try { localStorage.setItem("snd", snd ? "1" : "0"); } catch (e) { }
+            };
+
+            const hit = (s, e) => {
+                if (snd) play(s);
+                document.documentElement.style.setProperty("--blue", PAL[s % 12]);
             e.classList.add("on");
             setTimeout(() => e.classList.remove("on"), 160);
         };
