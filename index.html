@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;600&family=Sacramento&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="&family=Silkscreen:wght@400;700&family=VT323">
     <title>Murendiwa's Bubble</title>
 </head>
 
@@ -118,30 +119,69 @@
                     Money
                 </button>
             </div>
+
             <div class="pane on" id="music">
-                <h3 style="text-align: center; font-size: 28px; margin-bottom: 22px">
-                    My top Jams
-                </h3>
-                <div class="deck">
-                    <div class="fcard" id="fcard" tabindex="0" role="button"
-                        aria-label="Music flashcard. Press Enter to flip, arrow keys for next and previous.">
-                        <div class="inner" id="finner">
-                            <div class="face fq">
-                                <span id="fq"></span><small>Tap to flip</small>
+                <h3 class="pl-h">My top Jams</h3>
+                <div class="pl" id="pl" role="group" aria-label="Music player: my top 10">
+                    <div class="pl-bar">Song</div>
+                    <div class="pl-body">
+                        <div class="pl-top" id="pl-top">
+                            <div class="pl-cover" id="pl-cover" tabindex="0"
+                                aria-label="Album cover. Swipe, drag or use the arrow keys to change album.">
+                                <span class="pl-n"></span><i class="pl-shape"></i>
+                                <div class="pl-cap"><b></b><small></small></div>
                             </div>
-                            <div class="face fb"><b id="fa"></b><span id="fs"></span></div>
+                            <div class="pl-side">
+                                <div class="pl-cd spin" id="pl-cd" aria-hidden="true"></div>
+                                <div class="pl-lcd" aria-hidden="true"><b id="pl-n">#10</b><small id="pl-k"></small>
+                                </div>
+                                <div class="pl-btns">
+                                    <button type="button" class="pb wide" id="pl-play"
+                                        aria-label="Pause auto-play"></button>
+                                    <button type="button" class="pb" id="pl-shuf" aria-label="Shuffle">
+                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M1 4h3l6 8h3M1 12h3l2-2.7M9 6.7L10.9 4H13" fill="none"
+                                                stroke="currentColor" stroke-width="1.7" />
+                                            <polygon points="15,2 15,6 12,4" />
+                                            <polygon points="15,10 15,14 12,12" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="pb" id="pl-prev"
+                                        aria-label="Previous album, towards number 10">
+                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                            <rect x="3" y="3" width="2" height="10" />
+                                            <polygon points="13,3 13,13 6,8" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="pb" id="pl-next"
+                                        aria-label="Next album, towards number 1">
+                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                            <polygon points="3,3 3,13 10,8" />
+                                            <rect x="11" y="3" width="2" height="10" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="pb" id="pl-fav" aria-label="Jump to my number 1">
+                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M8 14.2L2.3 8.5A3.6 3.6 0 0 1 8 4a3.6 3.6 0 0 1 5.7 4.5z"
+                                                fill="currentColor" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+                        <label class="pl-row"><span>Artist:</span><span class="pl-sel"><select
+                                    id="pl-artist"></select></span></label>
+                        <div class="pl-row"><span>Title:</span>
+                            <div class="pl-field" id="pl-tf"><span id="pl-title"></span></div>
+                        </div>
+                        <label class="pl-row pl-pos"><span>#10</span><input type="range" id="pl-pos" min="0" max="9"
+                                step="1" value="0" aria-label="Position in my top 10" /><span>#1</span></label>
                     </div>
                 </div>
-                <div class="fctl">
-                    <button class="btn o" id="fprev" aria-label="Previous card">
-                        Back</button><span id="fcnt" aria-live="polite"></span><button class="btn" id="fnext">Next
-                        card</button>
-                </div>
-                <h3 class="sh">On my shelf</h3>
-                <div class="shelf" id="shelf" aria-label="My top 10 artists, number one on the left"></div>
-                <p class="note">Tap a spine to jump to that card.</p>
+                <p class="note pl-note">Swipe or drag the cover to change album.</p>
+                <p class="sr" id="pl-live" aria-live="polite"></p>
             </div>
+
             <div class="pane" id="photos">
                 <div class="cats" id="cats" role="group" aria-label="Photo categories"></div>
                 <div class="focus" id="pf"></div>
