@@ -56,7 +56,7 @@
                     <span>CANDY<br />Record</span>
                 </div>
             </div>
-            
+
             <div class="piano">
                 <small>Tap the keys or use A to L on your keyboard. Each key
                     changes the colour of the site.</small>
@@ -67,6 +67,8 @@
     </section>
 
     <section id="about">
+        <div class="sky" id="sky" aria-hidden="true"></div>
+
         <div class="in">
             <h2>About me</h2>
             <div class="cols">
@@ -235,7 +237,7 @@
             o.start(t);
             o.stop(t + 1.5);
         };
-        
+
         const PAL = [
             "#1A34D6",
             "#5B2FD6",
@@ -252,23 +254,23 @@
         ];
         const els = {};
         // sound setting (remembered in this browser)
-            let snd = true;
-            try { snd = localStorage.getItem("snd") !== "0"; } catch (e) { }
-            const sb = document.getElementById("snd");
-            const paintSnd = () => {
-                sb.textContent = "Sound: " + (snd ? "on" : "off");
-                sb.setAttribute("aria-pressed", snd);
-            };
+        let snd = true;
+        try { snd = localStorage.getItem("snd") !== "0"; } catch (e) { }
+        const sb = document.getElementById("snd");
+        const paintSnd = () => {
+            sb.textContent = "Sound: " + (snd ? "on" : "off");
+            sb.setAttribute("aria-pressed", snd);
+        };
+        paintSnd();
+        sb.onclick = () => {
+            snd = !snd;
             paintSnd();
-            sb.onclick = () => {
-                snd = !snd;
-                paintSnd();
-                try { localStorage.setItem("snd", snd ? "1" : "0"); } catch (e) { }
-            };
+            try { localStorage.setItem("snd", snd ? "1" : "0"); } catch (e) { }
+        };
 
-            const hit = (s, e) => {
-                if (snd) play(s);
-                document.documentElement.style.setProperty("--blue", PAL[s % 12]);
+        const hit = (s, e) => {
+            if (snd) play(s);
+            document.documentElement.style.setProperty("--blue", PAL[s % 12]);
             e.classList.add("on");
             setTimeout(() => e.classList.remove("on"), 160);
         };
@@ -372,6 +374,71 @@
             inp.onchange = () => [...inp.files].forEach(f => { const im = new Image(); im.onload = () => { const s = Math.min(1, 700 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); (store[CATS[cat]] = store[CATS[cat]] || []).push(c.toDataURL('image/jpeg', .8)); save(); drawPhotos() }; im.src = URL.createObjectURL(f) }); pf.append(a)
         }
         drawPhotos();
+
+        // drifting clouds behind the About section
+        (function () {
+            const sec = document.getElementById("about"), sky = document.getElementById("sky");
+            if (!sky) return;
+
+            // each cloud: [mirror, top %, width px, opacity, speed px/s, height stretch, blur px]
+            const D = [
+                [0, 4, 300, .6, 6, 1, 1.5],
+                [1, 20, 560, .95, 15, 1, 0],
+                [0, 38, 360, .7, 8, .85, 1],
+                [1, 56, 680, .95, 18, 1.05, 0],
+                [0, 72, 420, .75, 10, .9, .5],
+                [1, 84, 520, .9, 13, 1, 0],
+                [0, 10, 480, .85, 11, .9, .5]
+            ];
+
+            let W = sec.clientWidth, k = 1;
+            const items = D.map(d => {
+                const el = new Image();
+                el.src = "assets/cloud.png";
+                el.alt = "";
+                el.draggable = false;
+                el.style.top = d[1] + "%";
+                el.style.opacity = d[3];
+                if (d[6]) el.style.filter = "blur(" + d[6] + "px)";
+                sky.append(el);
+                return { el, d, w: 0, x: 0, sc: "" };
+            });
+
+            function layout(first) {
+                W = sec.clientWidth;
+                k = Math.max(.55, Math.min(1.1, W / 1280));   // smaller clouds on phones
+                items.forEach((o, i) => {
+                    o.w = o.d[2] * k;
+                    o.el.style.width = o.w + "px";
+                    o.sc = "scale(" + (o.d[0] ? -1 : 1) + "," + o.d[5] + ")";
+                    o.x = first ? ((i * .618) % 1) * (W + o.w) - o.w : Math.min(o.x, W);
+                    o.el.style.transform = "translate3d(" + o.x + "px,0,0) " + o.sc;
+                });
+            }
+            layout(true);
+            addEventListener("resize", () => layout(false));
+
+            // reduced motion: leave the sky still
+            if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+            let last = 0, raf = 0;
+            function frame(ts) {
+                const dt = Math.min(.05, (ts - last) / 1000 || 0);
+                last = ts;
+                items.forEach(o => {
+                    o.x += o.d[4] * dt;
+                    if (o.x > W) o.x = -o.w;                  // wrap round to the left
+                    o.el.style.transform = "translate3d(" + o.x + "px,0,0) " + o.sc;
+                });
+                raf = requestAnimationFrame(frame);
+            }
+
+            // only animate while About is on screen
+            new IntersectionObserver(es => {
+                if (es[0].isIntersecting) { last = 0; if (!raf) raf = requestAnimationFrame(frame); }
+                else { cancelAnimationFrame(raf); raf = 0; }
+            }).observe(sec);
+        })();
 
     </script>
 </body>

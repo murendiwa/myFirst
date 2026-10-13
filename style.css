@@ -351,9 +351,29 @@ h1 {
 }
 
 /* about */
+
 #about {
-    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(180deg, var(--blue) 0, #5d93e8 80px, #8fbaf2 45%, #cfe3fb 100%);
     color: var(--ink);
+}
+
+.sky {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.sky img {
+    position: absolute;
+    left: 0;
+    height: auto;
+    max-width: none;
+    user-select: none;
+    will-change: transform;
 }
 
 h2 {
