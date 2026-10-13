@@ -293,6 +293,7 @@ h1 {
     margin: auto;
     touch-action: manipulation;
 }
+
 /* piano sound toggle */
 .snd {
     display: block;
