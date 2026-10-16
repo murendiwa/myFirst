@@ -149,7 +149,13 @@ nav li a.on {
 
 /* home */
 #home {
-    background: var(--blue);
+    position: relative;
+    isolation: isolate;
+    /* space at the top, thickening into blue atmosphere at the bottom, where About's sky starts */
+    background:
+        radial-gradient(ellipse 55% 30% at 82% 18%, rgba(80, 70, 220, .30), transparent 70%),
+        radial-gradient(ellipse 50% 26% at 12% 52%, rgba(26, 52, 214, .22), transparent 70%),
+        linear-gradient(180deg, #02030c 0, #050a22 38%, #0a1a6e 72%, var(--blue) 100%);
     padding-top: 120px;
     padding-bottom: 0;
 }
@@ -460,7 +466,15 @@ dl.facts {
 
 /* hobbies */
 #hobbies {
-    background: var(--ink)
+    /* the light sky at the bottom of About deepens into evening blue, with the city glowing at the bottom */
+    background:
+        radial-gradient(ellipse 70% 220px at 50% 100%, rgba(120, 160, 255, .45), transparent),
+        linear-gradient(180deg, #cfe3fb 0, #7da4e6 60px, #3a63d6 200px, var(--blue) 50%, #14279f 100%);
+    padding-top: 190px;
+    padding-bottom: 300px;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
 }
 
 .tabs {
@@ -1064,15 +1078,27 @@ dl.facts {
 
 /* contact */
 #contact {
-    background: var(--blue)
+    /* underground: topsoil at the top (same brown as the ground under the city), heating up towards the lava */
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(180deg, #3a2415 0, #2f1c10 30%, #24140b 58%, #3a1208 82%, #8a2008 100%);
+    padding-top: 130px;
+    padding-bottom: 230px;
 }
 
 .cta {
-    display: block
+    text-align: center
 }
 
 .cta p {
-    max-width: 40ch
+    max-width: 40ch;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.cta .icons {
+    justify-content: center
 }
 
 form {
@@ -1138,16 +1164,96 @@ form textarea {
 }
 
 footer {
-    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     text-align: center;
-    padding: 26px;
+    padding: 80px 26px 26px;
+    color: var(--ink);
     font-size: 15px;
-    opacity: .9
+    font-weight: 700;
+    /* molten rock, hottest at the bottom */
+    background: linear-gradient(180deg, #8a2008 0, #d6400f 35%, #ff7a18 72%, #ffa21f 100%);
+}
+
+footer p {
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 18% 70%, rgba(255, 220, 90, .85) 0 7%, transparent 26%),
+        radial-gradient(circle at 52% 88%, rgba(255, 190, 40, .9) 0 9%, transparent 30%),
+        radial-gradient(circle at 84% 62%, rgba(255, 130, 30, .8) 0 10%, transparent 32%),
+        radial-gradient(circle at 36% 30%, rgba(255, 90, 20, .6) 0 8%, transparent 28%);
+    animation: lava 11s ease-in-out infinite alternate;
+}
+
+/* soft top edge so the lava rises out of the hot rock above it */
+footer::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 120px;
+    z-index: -1;
+    background: linear-gradient(180deg, #8a2008, rgba(138, 32, 8, 0));
+}
+
+@keyframes lava {
+    to {
+        transform: translate3d(7%, -6%, 0) scale(1.12);
+    }
+}
+
+.bub {
+    position: absolute;
+    left: var(--x);
+    bottom: -20px;
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff2b0, #ffb000 60%, rgba(255, 90, 20, .7));
+    opacity: 0;
+    z-index: -1;
+    animation: bubble var(--t) ease-in infinite;
+    animation-delay: var(--w);
+}
+
+@keyframes bubble {
+    0% {
+        transform: translateY(0) scale(.6);
+        opacity: 0;
+    }
+
+    15% {
+        opacity: .9;
+    }
+
+    100% {
+        transform: translateY(-110px) scale(1.1);
+        opacity: 0;
+    }
 }
 
 @media(max-width:800px) {
     section {
         padding: 84px 6vw
+    }
+
+    #hobbies {
+        padding-top: 160px;
+        padding-bottom: 200px
+    }
+
+    #contact {
+        padding-top: 110px;
+        padding-bottom: 200px
     }
 
     #home {
@@ -1215,4 +1321,109 @@ footer {
     html {
         scroll-behavior: auto
     }
+}
+
+/* stars in space (Home) */
+.stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 520px), transparent calc(100% - 90px));
+    mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 520px), transparent calc(100% - 90px));
+}
+
+.stars i {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--bone);
+    animation: twinkle 4s ease-in-out infinite;
+}
+
+.stars.off i {
+    animation-play-state: paused;
+}
+
+@keyframes twinkle {
+    50% {
+        opacity: .12;
+        transform: scale(.7);
+    }
+}
+
+.stars b {
+    position: absolute;
+    width: 120px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(242, 244, 250, 0), var(--bone));
+    transform: rotate(28deg);
+    opacity: 0;
+    animation: shoot 1.2s ease-out forwards;
+}
+
+@keyframes shoot {
+    0% {
+        opacity: 0;
+        translate: 0 0;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        translate: 220px 117px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+    .stars i,
+    .stars b,
+    footer::before,
+    .bub {
+        animation: none;
+    }
+}
+
+
+/* the city on the horizon (bottom of Hobbies) */
+.city {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 300px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* underground (Contact) */
+.earth {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.city svg,
+.earth svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media(max-width:800px) {
+    .city {
+        height: 190px;
+    }
+}
+
+/* keep the contact text easy to read over the pebbles and gold */
+#contact h2,
+#contact p {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .7), 0 2px 12px rgba(0, 0, 0, .5);
 }
