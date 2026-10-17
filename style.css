@@ -416,44 +416,21 @@ dl.facts {
     gap: 10px 20px;
 }
 
-.me {
-    margin: 0;
+.tag {
+    position: absolute;
+    z-index: 30;
+    left: max(0px, calc(50% - var(--w) / 2 - 8px));
+    bottom: 36px;
+    pointer-events: none;
+    background: var(--amber);
+    color: var(--ink);
+    font: 800 16px var(--d);
+    padding: 6px 14px;
+    border-radius: 99px;
+    transform: rotate(-4deg);
+    box-shadow: 0 4px 0 rgba(10, 19, 48, .25);
 }
 
-.frame {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 4/5;
-    border-radius: 26px;
-    border: 3px dashed var(--blue);
-    background: var(--blue) center/cover no-repeat;
-    color: var(--bone);
-    text-align: center;
-    font: 800 26px/1.1 var(--d);
-    cursor: pointer;
-    overflow: hidden;
-    transition: transform 0.25s;
-}
-
-.frame:hover {
-    transform: rotate(-1.5deg);
-}
-
-.frame small {
-    display: block;
-    font: 400 15px var(--b);
-    margin-top: 8px;
-    opacity: 0.85;
-}
-
-.frame.has {
-    border-style: solid;
-    border-color: var(--ink);
-}
-
-.frame.has span {
-    display: none;
-}
 
 .facts dt {
     opacity: 0.75;
@@ -974,48 +951,110 @@ dl.facts {
     color: var(--ink)
 }
 
-.focus {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 14px
-}
-
-.focus .card {
+.pcar {
+    --w: clamp(170px, 30vw, 270px);
     position: relative;
-    aspect-ratio: 3/4;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #16224f center/cover;
-    transition: filter .3s, transform .3s
+    height: calc(var(--w) * 4 / 3 + 24px);
+    margin: 6px auto 0;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+    outline-offset: 6px;
 }
 
-.focus:hover .card:not(:hover) {
-    filter: blur(5px) brightness(.6);
-    transform: scale(.96)
+.pcar:active {
+    cursor: grabbing;
 }
 
-.focus .card button {
+.pc {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    left: 50%;
+    top: 12px;
+    width: var(--w);
+    margin-left: calc(var(--w) / -2);
+    aspect-ratio: 3 / 4;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #16224f;
+    box-shadow: 0 18px 40px rgba(2, 3, 12, .45);
+    transition: transform .55s cubic-bezier(.3, .8, .25, 1), opacity .45s, filter .45s;
+    will-change: transform;
+}
+
+.pc img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.pc[aria-hidden="false"] {
+    cursor: zoom-in;
+}
+
+.pbtn {
+    position: absolute;
+    top: 50%;
+    z-index: 20;
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
     border: 0;
+    border-radius: 50%;
     background: var(--amber);
     color: var(--ink);
-    font-size: 17px;
-    cursor: pointer
+    font: 700 28px/1 var(--b);
+    padding: 0 0 4px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(2, 3, 12, .4);
+    transition: transform .2s;
 }
 
-.focus .add {
-    display: grid;
-    place-items: center;
-    border: 2px dashed var(--amber);
-    background: transparent;
-    color: var(--amber);
-    font-weight: 600;
-    cursor: pointer
+.pbtn:hover {
+    transform: scale(1.08);
+}
+
+.pprev {
+    left: max(0px, calc(50% - var(--w) * 1.09 - 58px));
+}
+
+.pnext {
+    right: max(0px, calc(50% - var(--w) * 1.09 - 58px));
+}
+
+.pdots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0 4px;
+}
+
+.pdots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 99px;
+    background: rgba(242, 244, 250, .4);
+    cursor: pointer;
+    transition: width .3s, background .3s;
+}
+
+.pdots i.on {
+    width: 26px;
+    background: var(--amber);
+}
+
+.pcar.empty {
+    height: auto;
+    cursor: default;
+}
+
+.pempty {
+    text-align: center;
+    padding: 70px 0;
+    opacity: .75;
+    max-width: none;
 }
 
 .pane p {
@@ -1322,108 +1361,45 @@ footer::after {
         scroll-behavior: auto
     }
 }
-
-/* stars in space (Home) */
-.stars {
-    position: absolute;
-    inset: 0;
+/* about photos: same fanned stack as the Photos tab, a bit smaller */
+.pcar.ab {
+    --w: clamp(190px, 24vw, 290px);
+    height: calc(var(--w) * 5 / 4 + 24px);
     overflow: hidden;
-    z-index: -1;
-    pointer-events: none;
-    -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 520px), transparent calc(100% - 90px));
-    mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 520px), transparent calc(100% - 90px));
+    margin: 0 auto;
+    /* soft left and right edges, so the photos fade out where the column ends */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
 }
 
-.stars i {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--bone);
-    animation: twinkle 4s ease-in-out infinite;
+.pcar.ab .pc {
+    aspect-ratio: 4 / 5;
+    border-radius: 24px;
+    border: 3px solid var(--ink);
+    box-shadow: none;
 }
 
-.stars.off i {
-    animation-play-state: paused;
+.pcar.ab .pbtn {
+    width: 38px;
+    height: 38px;
+    margin-top: -19px;
+    font-size: 24px;
+    left: auto;
+    right: auto;
 }
 
-@keyframes twinkle {
-    50% {
-        opacity: .12;
-        transform: scale(.7);
-    }
+.pcar.ab .pprev {
+    left: 8%;
 }
 
-.stars b {
-    position: absolute;
-    width: 120px;
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, rgba(242, 244, 250, 0), var(--bone));
-    transform: rotate(28deg);
-    opacity: 0;
-    animation: shoot 1.2s ease-out forwards;
+.pcar.ab .pnext {
+    right: 8%;
 }
 
-@keyframes shoot {
-    0% {
-        opacity: 0;
-        translate: 0 0;
-    }
-
-    15% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-        translate: 220px 117px;
-    }
+.me .pdots i {
+    background: rgba(10, 19, 48, .3);
 }
 
-@media(prefers-reduced-motion:reduce) {
-
-    .stars i,
-    .stars b,
-    footer::before,
-    .bub {
-        animation: none;
-    }
-}
-
-
-/* the city on the horizon (bottom of Hobbies) */
-.city {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 300px;
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* underground (Contact) */
-.earth {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-}
-
-.city svg,
-.earth svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-@media(max-width:800px) {
-    .city {
-        height: 190px;
-    }
-}
-
-/* keep the contact text easy to read over the pebbles and gold */
-#contact h2,
-#contact p {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, .7), 0 2px 12px rgba(0, 0, 0, .5);
+.me .pdots i.on {
+    background: var(--blue);
 }
