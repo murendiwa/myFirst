@@ -9,18 +9,17 @@
     <meta name="theme-color" content="#1a34d6" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Murendiwa's Bubble" />
-    <meta property="og:description"
-        content="Software development student, music collector, chess player." />
+    <meta property="og:description" content="Software development student, music collector, chess player." />
 
-        <meta property="og:url" content="https://murendiwa.github.io/myFirst/" />
-        <meta property="og:image" content="https://murendiwa.github.io/myFirst/assets/og-image.png" />
-        <meta property="og:image:alt" content=" Murendiwa (Candyy), software development student" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://murendiwa.github.io/myFirst//assets/og-image.png" />
+    <meta property="og:url" content="https://murendiwa.github.io/myFirst/" />
+    <meta property="og:image" content="https://murendiwa.github.io/myFirst/assets/og-image.png" />
+    <meta property="og:image:alt" content=" Murendiwa (Candyy), software development student" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://murendiwa.github.io/myFirst//assets/og-image.png" />
 
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-        <link
+    <link
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;600&family=Sacramento&family=Silkscreen:wght@400;700&family=VT323&display=swap"
         rel="stylesheet" />
     <title>Murendiwa's Bubble</title>
@@ -854,32 +853,32 @@
             setTimeout(() => e.classList.remove("on"), 160);
         };
         const NOTE_NAMES = ["C", "C sharp", "D", "D sharp", "E", "F", "F sharp", "G", "G sharp", "A", "A sharp", "B"];
-            const noteName = (s) => NOTE_NAMES[s % 12] + " " + (4 + Math.floor(s / 12));
-            const makeKey = (s, cls) => {
-                const e = document.createElement("button");
-                e.type = "button";
-                e.className = cls;
-                e.setAttribute("aria-label", noteName(s));
-                e.onpointerdown = (ev) => { ev.stopPropagation(); hit(s, e); };
-                e.onkeydown = (ev) => {
-                    if ((ev.key === "Enter" || ev.key === " ") && !ev.repeat) {
-                        ev.preventDefault();
-                        hit(s, e);
-                    }
-                };
-                return e;
+        const noteName = (s) => NOTE_NAMES[s % 12] + " " + (4 + Math.floor(s / 12));
+        const makeKey = (s, cls) => {
+            const e = document.createElement("button");
+            e.type = "button";
+            e.className = cls;
+            e.setAttribute("aria-label", noteName(s));
+            e.onpointerdown = (ev) => { ev.stopPropagation(); hit(s, e); };
+            e.onkeydown = (ev) => {
+                if ((ev.key === "Enter" || ev.key === " ") && !ev.repeat) {
+                    ev.preventDefault();
+                    hit(s, e);
+                }
             };
-            wn.forEach((s, i) => {
-                const e = makeKey(s, "w");
-                e.textContent = ky[i]?.toUpperCase() || "";
-                K.append(e);
-                els[i] = [s, e];
-            });
-            Object.entries(bl).forEach(([i, s]) => {
-                const e = makeKey(s, "k");
-                e.style.left = `calc(${((+i + 1) / wn.length) * 100}% - 2.6%)`;
-                K.append(e);
-            });
+            return e;
+        };
+        wn.forEach((s, i) => {
+            const e = makeKey(s, "w");
+            e.textContent = ky[i]?.toUpperCase() || "";
+            K.append(e);
+            els[i] = [s, e];
+        });
+        Object.entries(bl).forEach(([i, s]) => {
+            const e = makeKey(s, "k");
+            e.style.left = `calc(${((+i + 1) / wn.length) * 100}% - 2.6%)`;
+            K.append(e);
+        });
         addEventListener("keydown", (e) => {
             const i = ky.indexOf(e.key);
             if (

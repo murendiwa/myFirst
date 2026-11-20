@@ -1683,6 +1683,7 @@ footer::after {
 .pcar.ab.single .pc {
     box-shadow: 8px 10px 0 rgba(26, 52, 214, .35);
 }
+
 /* piano keys are real buttons now */
 .w,
 .k {
@@ -1708,6 +1709,7 @@ footer::after {
     outline-color: var(--bone);
     outline-offset: 2px;
 }
+
 .est {
     font-size: 14px;
     font-weight: 600;
