@@ -212,9 +212,15 @@
                             value="10" /><output id="ro"></output></label>
                     <label><span>For how long</span><input type="range" id="y" min="1" max="40" value="10" /><output
                             id="yo"></output></label>
+                    <div class="est">Estimated future value</div>
                     <div class="res" id="fv" aria-live="polite"></div>
                     <div class="split"><i id="sp"></i></div>
                     <small id="sm"></small>
+                    <p class="disclaimer">
+                        This is an illustrative estimate only. It assumes a constant yearly return, applied monthly,
+                        and the same amount saved every month. It does not account for taxes, fees, inflation or
+                        changing returns, and real investments can lose value. Not financial advice.
+                    </p>
                 </div>
             </div>
         </div>
@@ -903,7 +909,7 @@
         const $ = id => document.getElementById(id), R = n => 'R' + Math.round(n).toLocaleString('en-ZA');
         function calc() {
             const m = +$('m').value, r = +$('r').value / 100 / 12, y = +$('y').value, n = y * 12, fv = r ? m * ((1 + r) ** n - 1) / r : m * n, c = m * n;
-            $('mo').textContent = R(m); $('ro').textContent = $('r').value + '%'; $('yo').textContent = y + ' yrs'; $('fv').textContent = R(fv); $('sp').style.width = c / fv * 100 + '%'; $('sm').textContent = `You put in ${R(c)}. Growth adds ${R(fv - c)}. Illustration only, not financial advice.`
+            $('mo').textContent = R(m); $('ro').textContent = $('r').value + '%'; $('yo').textContent = y + ' yrs'; $('fv').textContent = R(fv); $('sp').style.width = c / fv * 100 + '%'; $('sm').textContent = `You put in ${R(c)}. Growth adds ${R(fv - c)}.`
         }
         ['m', 'r', 'y'].forEach(i => $(i).oninput = calc); calc();
 

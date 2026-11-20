@@ -1708,3 +1708,22 @@ footer::after {
     outline-color: var(--bone);
     outline-offset: 2px;
 }
+.est {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+    opacity: .8;
+}
+
+.est+.res {
+    margin-top: 2px;
+}
+
+.disclaimer {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 12px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid rgba(10, 19, 48, .15);
+    opacity: .85;
+}
