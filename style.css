@@ -1683,3 +1683,28 @@ footer::after {
 .pcar.ab.single .pc {
     box-shadow: 8px 10px 0 rgba(26, 52, 214, .35);
 }
+/* piano keys are real buttons now */
+.w,
+.k {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.w {
+    padding: 0 0 8px;
+}
+
+.k {
+    padding: 0;
+}
+
+.w:focus-visible {
+    outline-offset: -5px;
+}
+
+.k:focus-visible {
+    outline-color: var(--bone);
+    outline-offset: 2px;
+}

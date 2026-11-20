@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="piano">
-                <small>Tap the keys or use A to L on your keyboard.</small>
+                <small>Tap the keys, press Tab then Enter or Space, or use A to L on your keyboard.</small>
                 <button class="snd" id="snd" type="button" aria-pressed="true">Sound: on</button>
                 <div class="keys" id="keys" role="group" aria-label="Piano keyboard"></div>
             </div>
@@ -842,24 +842,33 @@
             e.classList.add("on");
             setTimeout(() => e.classList.remove("on"), 160);
         };
-        wn.forEach((s, i) => {
-            const e = document.createElement("div");
-            e.className = "w";
-            e.textContent = ky[i]?.toUpperCase() || "";
-            e.onpointerdown = () => hit(s, e);
-            K.append(e);
-            els[i] = [s, e];
-        });
-        Object.entries(bl).forEach(([i, s]) => {
-            const e = document.createElement("div");
-            e.className = "k";
-            e.style.left = `calc(${((+i + 1) / wn.length) * 100}% - 2.6%)`;
-            e.onpointerdown = (ev) => {
-                ev.stopPropagation();
-                hit(s, e);
+        const NOTE_NAMES = ["C", "C sharp", "D", "D sharp", "E", "F", "F sharp", "G", "G sharp", "A", "A sharp", "B"];
+            const noteName = (s) => NOTE_NAMES[s % 12] + " " + (4 + Math.floor(s / 12));
+            const makeKey = (s, cls) => {
+                const e = document.createElement("button");
+                e.type = "button";
+                e.className = cls;
+                e.setAttribute("aria-label", noteName(s));
+                e.onpointerdown = (ev) => { ev.stopPropagation(); hit(s, e); };
+                e.onkeydown = (ev) => {
+                    if ((ev.key === "Enter" || ev.key === " ") && !ev.repeat) {
+                        ev.preventDefault();
+                        hit(s, e);
+                    }
+                };
+                return e;
             };
-            K.append(e);
-        });
+            wn.forEach((s, i) => {
+                const e = makeKey(s, "w");
+                e.textContent = ky[i]?.toUpperCase() || "";
+                K.append(e);
+                els[i] = [s, e];
+            });
+            Object.entries(bl).forEach(([i, s]) => {
+                const e = makeKey(s, "k");
+                e.style.left = `calc(${((+i + 1) / wn.length) * 100}% - 2.6%)`;
+                K.append(e);
+            });
         addEventListener("keydown", (e) => {
             const i = ky.indexOf(e.key);
             if (
